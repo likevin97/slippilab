@@ -16,11 +16,11 @@ export interface GetReplaysResponse {
 
 export class Api {
 
-    public async getSlpReplays() {
+    public async getSlpReplays(connectCode: string) {
         try {
             // 👇️ const data: GetUsersResponse
             const { data, status } = await axios.get<GetReplaysResponse>(
-                'http://localhost:8080/replays-by-connect-code?connectCode=KVLR%23653',
+                'http://localhost:8080/replays-by-connect-code?connectCode=' + encodeURIComponent(connectCode.toUpperCase()),
                 {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
@@ -29,7 +29,7 @@ export class Api {
                 },
             );
       
-            console.log(JSON.stringify(data, null, 4));
+            // console.log(JSON.stringify(data, null, 4));
         
             // 👇️ "response status is: 200"
             console.log('response status is: ', status);
@@ -46,10 +46,10 @@ export class Api {
         }
     }
 
-    public async postSlpReplays(file: File) {
+    public async postSlpReplays(connectCode: string, file: File) {
         const formData = new FormData();
         formData.append("file", file, file.name);
-        formData.append("connectCode", "KVLR#653")
+        formData.append("connectCode", connectCode.toUpperCase())
         axios.post('http://localhost:8080/add-replay', formData, {
             headers: {
             'Content-Type': 'multipart/form-data'

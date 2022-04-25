@@ -24,8 +24,7 @@ export class ReplayStoreSelect extends LitElement {
   @query('#replay-input-files')
   private filesInput?: HTMLInputElement;
 
-  @query('#replay-input-dir')
-  private dirInput?: HTMLInputElement;
+  private connectCodeInput?: string;
 
   @queryAll('sp-action-button')
   private actionButtons?: NodeListOf<ActionButton>;
@@ -38,10 +37,18 @@ export class ReplayStoreSelect extends LitElement {
     if (!input?.files) {
       return;
     }
+
+    if (this.connectCodeInput === undefined) {
+      console.log("Connect code is undefined while trying to save to replay store");
+      return;
+    }
+
     if (input.files.length > 0) {
       var allFiles = Array.from(input.files);
       
       model.setFiles(allFiles);
+
+      let currentConnectCode = this.connectCodeInput;
 
       allFiles.forEach(async function (slpFile) {
         var fileNameComponents = slpFile.name.split(".");
@@ -49,9 +56,9 @@ export class ReplayStoreSelect extends LitElement {
         if (fileExtension == "slp") {
           console.log("Got the slp file. Trying to zip and upload");
           var zipFile = await model.zip(slpFile);
-          api.postSlpReplays(zipFile);
+          api.postSlpReplays(currentConnectCode, zipFile);
         } else {
-          api.postSlpReplays(slpFile);
+          api.postSlpReplays(currentConnectCode, slpFile);
         }
       })
 
@@ -62,19 +69,27 @@ export class ReplayStoreSelect extends LitElement {
 
 
   private async openFromReplayStore() {
-    const slpReplays = await api.getSlpReplays()
+
+    console.log(this.connectCodeInput);
+
+    if (this.connectCodeInput === undefined) {
+      console.log("Connect code is undefined while trying to open from replay store");
+      return;
+    }
+    const slpReplays = await api.getSlpReplays(this.connectCodeInput);
 
     if (Array.isArray(slpReplays)) {
       var files: File[] = [];
 
+      console.log("Here are the number of replays fetched for " + this.connectCodeInput + ":", slpReplays.length);
+
       slpReplays.forEach(async function (slpReplay) {
-        console.log("Here is the srsReplay: ", slpReplay);
         var file = blobToFile(slpReplay);
 
         files.push(file);
 
       });
-      model.setFiles(Array.from(files))
+      model.setFiles(Array.from(files));
     }
     else {
       console.log("Error fetching replays");
@@ -85,12 +100,17 @@ export class ReplayStoreSelect extends LitElement {
     this.filesInput?.click();
   }
 
+  private setConnectCode(event: any) {
+    let connectCodeFromEvent = event.target.value;
+    this.connectCodeInput = connectCodeFromEvent;
+  }
+
 
   render() {
     return html`
       <div class="container">
         <sp-field-label for="connect-code">Connect Code</sp-field-label>
-        <sp-textfield id="connect-code" placeholder="Enter your connect code"></sp-textfield>
+        <sp-textfield id="connect-code" @change=${(event: any) => this.setConnectCode(event)} placeholder="Enter your connect code"></sp-textfield>
       </div>
       <div class="container">
         <sp-action-button class="label" @click=${this.openFromReplayStore}>
@@ -122,10 +142,6 @@ function blobToFile(slpReplay: any) {
 
   const byteArray = new Uint8Array(byteNumbers);
   const blob = new Blob([byteArray], { type: slpReplay.contentType });
-
-  console.log("Here is the blob: ", blob);
-
-  console.log("here is the blob content type: ", blob.type);
 
   var file = new File([blob], slpReplay.fileName);
   return file;
