@@ -9,4 +9,6 @@
 !.yarn/versions
 dist/
 node_modules/
-types/
+**/.DS_Store
+.firebase
+.cert

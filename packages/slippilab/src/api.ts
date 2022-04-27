@@ -20,7 +20,7 @@ export class Api {
         try {
             // 👇️ const data: GetUsersResponse
             const { data, status } = await axios.get<GetReplaysResponse>(
-                'http://localhost:8080/replays-by-connect-code?connectCode=' + encodeURIComponent(connectCode.toUpperCase()),
+                'https://www.slippi-replay.store/replays-by-connect-code?connectCode=' + encodeURIComponent(connectCode.toUpperCase()),
                 {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
@@ -50,7 +50,7 @@ export class Api {
         const formData = new FormData();
         formData.append("file", file, file.name);
         formData.append("connectCode", connectCode.toUpperCase())
-        axios.post('http://localhost:8080/add-replay', formData, {
+        axios.post('https://www.slippi-replay.store/add-replay', formData, {
             headers: {
             'Content-Type': 'multipart/form-data'
             }
