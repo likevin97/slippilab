@@ -109,13 +109,14 @@ export class ReplayStoreSelect extends LitElement {
   render() {
     return html`
       <div class="container">
-        <sp-field-label for="connect-code">Connect Code</sp-field-label>
         <sp-textfield id="connect-code" @change=${(event: any) => this.setConnectCode(event)} placeholder="Enter your connect code"></sp-textfield>
       </div>
       <div class="container">
         <sp-action-button class="label" @click=${this.openFromReplayStore}>
           Open Replay Store
         </sp-action-button>
+      </div>
+      <div class="container">
         <sp-action-button class="label" @click=${this.openFile}>
           Save Replay Store
         </sp-action-button>
