@@ -174,7 +174,7 @@ export class AppRoot extends LitElement {
             <div class="bottom">
               <sp-link
                 size="xl"
-                href="https://github.com/frankborden/slippilab"
+                href="https://github.com/likevin97/slippilab"
                 target="_blank"
                 rel="noopener noreferrer"
                 >Source</sp-link
