@@ -1,3 +1,5 @@
+> **_NOTE:_** This repository is a fork of [frankborden/slippilab](https://github.com/frankborden/slippilab). This repository adds the ability to store and fetch replays remotely from a cloud database by interfacing with [likevin97/slippi-replay-store](https://github.com/likevin97/slippi-replay-store). All other functionality is the same. Big thanks to [frankborden](https://github.com/frankborden) for writing the original Slippi Lab frontend client.
+
 # SlippiLab
 
 Replay your .slp files in the browser. SlippiLab is still in development.
