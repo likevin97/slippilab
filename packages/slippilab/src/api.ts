@@ -50,11 +50,18 @@ export class Api {
         const formData = new FormData();
         formData.append("file", file, file.name);
         formData.append("connectCode", connectCode.toUpperCase())
-        axios.post('https://www.slippi-replay.store/add-replay', formData, {
+        await axios.post('https://www.slippi-replay.store/add-replay', formData, {
             headers: {
             'Content-Type': 'multipart/form-data'
             }
         });
+    }
+
+    public async deleteSlpReplaysExceptLatest(connectCode: string, num: number) {
+        await axios.delete('https://www.slippi-replay.store/delete-replays-by-connect-code-excluding-latest?connectCode=' 
+            + encodeURIComponent(connectCode.toUpperCase()) + "&num=" + num);
+        
+        console.log("Finished deleting for connect code " + connectCode + " except for the " + num + " latest replays");
     }
 }
 
