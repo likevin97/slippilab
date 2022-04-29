@@ -50,17 +50,19 @@ export class ReplayStoreSelect extends LitElement {
 
       let currentConnectCode = this.connectCodeInput;
 
-      allFiles.forEach(async function (slpFile) {
+      for (var slpFile of allFiles) {
         var fileNameComponents = slpFile.name.split(".");
         var fileExtension = fileNameComponents[fileNameComponents.length - 1];
         if (fileExtension == "slp") {
           console.log("Got the slp file. Trying to zip and upload");
           var zipFile = await model.zip(slpFile);
-          api.postSlpReplays(currentConnectCode, zipFile);
+          await api.postSlpReplays(currentConnectCode, zipFile);
+          console.log("Zipped and uploaded slp file: ", zipFile.name);
         } else {
-          api.postSlpReplays(currentConnectCode, slpFile);
+          await api.postSlpReplays(currentConnectCode, slpFile);
+          console.log("Uploaded pre-zipped slp file: ", slpFile.name);
         }
-      })
+      }
 
     }
     this.actionButtons?.forEach((actionButton) => actionButton.blur());
