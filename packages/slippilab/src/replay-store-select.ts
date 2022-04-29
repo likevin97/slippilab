@@ -5,6 +5,7 @@ import '@spectrum-web-components/textfield/sp-textfield';
 import type { ActionButton } from '@spectrum-web-components/action-button';
 import { model } from './model';
 import { api } from './api';
+import { Constants } from './const';
 
 
 @customElement('replay-store-select')
@@ -50,7 +51,7 @@ export class ReplayStoreSelect extends LitElement {
 
       let currentConnectCode = this.connectCodeInput;
 
-      for (var slpFile of allFiles) {
+      for await (var slpFile of allFiles) {
         var fileNameComponents = slpFile.name.split(".");
         var fileExtension = fileNameComponents[fileNameComponents.length - 1];
         if (fileExtension == "slp") {
@@ -63,6 +64,8 @@ export class ReplayStoreSelect extends LitElement {
           console.log("Uploaded pre-zipped slp file: ", slpFile.name);
         }
       }
+
+      api.deleteSlpReplaysExceptLatest(currentConnectCode, Constants.MAX_REPLAY_PER_CONNECT_CODE);
 
     }
     this.actionButtons?.forEach((actionButton) => actionButton.blur());
