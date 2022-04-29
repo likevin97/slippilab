@@ -35,12 +35,18 @@ export class ReplayStoreSelect extends LitElement {
   }
 
   private async selectFiles(input?: HTMLInputElement) {
-    if (!input?.files) {
+    if (this.connectCodeInput === undefined) {
+      alert("Connect code is undefined while trying to save to replay store");
       return;
     }
 
-    if (this.connectCodeInput === undefined) {
-      console.log("Connect code is undefined while trying to save to replay store");
+    if (!input?.files) {
+      alert("Files have not been selected");
+      return;
+    }
+
+    if (input.files.length > Constants.MAX_REPLAY_PER_CONNECT_CODE) {
+      alert("More than " + Constants.MAX_REPLAY_PER_CONNECT_CODE + " files were selected.");
       return;
     }
 
@@ -75,10 +81,8 @@ export class ReplayStoreSelect extends LitElement {
 
   private async openFromReplayStore() {
 
-    console.log(this.connectCodeInput);
-
     if (this.connectCodeInput === undefined) {
-      console.log("Connect code is undefined while trying to open from replay store");
+      alert("Connect code is undefined while trying to open from replay store");
       return;
     }
     const slpReplays = await api.getSlpReplays(this.connectCodeInput);
@@ -102,6 +106,10 @@ export class ReplayStoreSelect extends LitElement {
   }
 
   private openFile() {
+    if (this.connectCodeInput === undefined) {
+      alert("Connect code is undefined while trying to save to replay store");
+      return;
+    }
     this.filesInput?.click();
   }
 
