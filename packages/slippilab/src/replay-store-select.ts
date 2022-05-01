@@ -81,7 +81,7 @@ export class ReplayStoreSelect extends LitElement {
 
   private async openFromReplayStore() {
 
-    if (this.connectCodeInput === undefined) {
+    if (this.connectCodeInput === undefined || this.connectCodeInput == "") {
       alert("Connect code is undefined while trying to open from replay store");
       return;
     }
@@ -91,6 +91,11 @@ export class ReplayStoreSelect extends LitElement {
       var files: File[] = [];
 
       console.log("Here are the number of replays fetched for " + this.connectCodeInput + ":", slpReplays.length);
+
+      if (slpReplays.length == 0) {
+        alert("Found 0 replays for the provided connect code");
+        return;
+      }
 
       slpReplays.forEach(async function (slpReplay) {
         var file = blobToFile(slpReplay);
@@ -126,12 +131,12 @@ export class ReplayStoreSelect extends LitElement {
       </div>
       <div class="container">
         <sp-action-button class="label" @click=${this.openFromReplayStore}>
-          Open Replay Store
+          Open From Replay Store
         </sp-action-button>
       </div>
       <div class="container">
         <sp-action-button class="label" @click=${this.openFile}>
-          Save Replay Store
+          Save To Replay Store
         </sp-action-button>
         <input
           id="replay-input-files"
